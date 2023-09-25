@@ -1,0 +1,135 @@
+# Design in-memory sql system
+
+Databases -> Tables -> create data, update data, delete data, get queries
+
+Functionalities:
+- create a database
+- create a table
+- Queries
+	1. Select all query - without any filtering and we will always get all the rows of data
+	2. Insert query
+- No limtation on columns and rows count
+- Column Types -> int, string
+- Size of data
+	- int - limits
+	- string - limits of number of characters, not null constraint
+
+
+1. Database -> Map<String, Table>, Name, Metadata
+2. Table -> 
+	List<Column> columns;
+	List<Map<Column, Object>> rows;
+3. DataConstraint ->
+	String name;
+	func isvalid()
+4. EmailDataConstraint -> 
+5. MobileDataConstraint -> 
+6. NotNullContraint ->
+7. SizeConstraint ->
+	noOfCharacters
+6. Column -> 
+	String name;
+	List<DataConstraint>
+	validate(Object data)
+7. ColumnInteger -> 
+8. ColumnString -> 
+
+class Row{
+	String rowId;
+	HashMap<String, String> columnValuesMap;
+	Date createdAt;
+	Date updatedAt;
+	
+}
+
+class Column{
+	String name;
+	List<DataConstraint> constraints;
+
+	public Column(String name){
+		this.name = name;
+		constraints = ArrayList<>();
+	}
+
+	public void addConstraint(DataConstraint c){
+		// Raise exception if that constraint already present in the constraints list
+		constraints.add(c);
+	}
+
+	public void validate(Object data){
+		for(DataConstraint c: constraints){
+			c.isValid(data)
+		}
+	}
+}
+
+class Table{
+	List<Column> columns;
+	List<Map<Column, Object>> rows;
+
+	Table(List<Column> columns){
+		this.columns = columns;
+	}
+
+	private void validateData(Map<Column, Object> rowData){
+		// forEach Column validate the data via validate
+	}
+
+	public void insert(Map<Column, Object> rowData){
+		this.validateData(rowData);
+		rows.add(rowData);
+	}
+}
+
+class DataConstraint{
+	String name;
+	public void isValid(Object obj){
+
+	}
+}
+
+class EmailConstarint implements DataConstraint{ 
+	public EmailConstarint(){
+		super("email");
+	}
+
+	public void isValid(Object obj){
+		String email = (String) obj;
+		// Split string by '@'
+		// Check for pattern shajja@hsjsj.com
+
+		// raise exception
+	}
+}
+
+class NotNullConstraint implements DataConstraint{
+	public NotNullConstraint(){
+		super("notnull");
+	}
+
+	public void isValid(Object obj){
+		if(obj != null){
+			return;
+		}
+		// raise exception
+	}
+}
+
+class SizeConstraint implements DataConstraint{
+	int noOfCharacters;
+	public SizeConstraint(int noOfCharacters){
+		super("size")
+		this.noOfCharacters = noOfCharacters;
+	}
+
+	public void isValid(Object obj){
+		String data = (String) obj;
+		if(data.length() == this.noOfCharacters){
+			return;
+		}
+		// raise exception
+	}
+}
+
+
+

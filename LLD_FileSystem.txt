@@ -1,0 +1,161 @@
+// Using seperate class for File and Folder
+class File{
+	String name;
+	Object content;
+	Date createdAt;
+	Date updatedAt;
+
+	public File(String name, Object content){
+		this.name = name;
+		this.content = content;
+		createdAt = new Date();
+		updatedAt = new Date();
+	}
+
+	public void update(Object content){
+		this.content = content;
+	}
+
+	public String getName(){
+		return this.name;
+	}
+
+	public Object getContent(){
+		return this.content;
+	}
+
+}
+
+class Folder{
+
+	String name;
+	Map<String, Folder> subFoldersMap;
+	Map<Stirng, Files> filesMap;
+	Date createdAt;
+	Date updatedAt;
+
+	public Folder(String name){
+		this.name = name;
+		this.subFoldersMap = new HashMap<>();
+		this.filesMap = new HashMap<>();
+		this.createdAt = new Date();
+		this.updatedAt = new Date();
+	}
+
+	public String getName(){
+		return this.name;
+	}
+
+	public Map<String, Folder> getSubFolders(){
+		return this.subFoldersMap;
+	}
+
+	public Map<String, File> getFiles(){
+		return this.filesMap;
+	}
+
+	public void addSubFolder(Folder folder){
+		if(subFoldersMap.contains(folder.getName()) || filesMap.contains(folder.getName())){
+			// Raise error
+			return;
+		}
+		subFoldersMap.put(folder.getName(), folder);
+	}
+
+	public void addFile(File file){
+		if(filesMap.contains(file.getName()) || filesMap.contains(file.getName())){
+			// Raise error
+			return;
+		}
+		subFoldersMap.put(file.getName(), file);
+	}
+
+	public void deleteFile(String fileName){
+		this.filesMap.remove(fileName);
+	}
+
+	public void deleteFolder(String folderName){
+		this.subFoldersMap.remove(folderName);
+	}
+}
+
+
+// Using Super class for File and Folder
+public abstract class Entry{
+	private Folder parent;
+	private String name;
+	private Date createdAt;
+	private Date updatedAt;
+
+	public Entry(String name, Folder p){
+		this.name = name;
+		this.parent = p;
+	}
+
+	public Date getCreatedAt(){
+		return this.createdAt;
+	}
+
+	public Date getUpdateAt(){
+		return this.updatedAt;
+	}
+
+	public void delete(){
+
+	}
+
+	public void updateName(String name){
+		this.name = name;
+	}
+
+	public String getName(){
+		return this.name;
+	}
+}
+
+
+class File extends Entry{
+	private Object content;
+
+	public File(String name, Folder p, Object content){
+		super(name, p);
+		this.content = content;
+	}
+
+	public void updateContent(Object content){
+		this.content = content;
+	}
+
+	public Object getContent(){
+		return this.content;
+	}
+
+}
+
+
+class Folder extends Entry{
+
+	Map<String, Entry> entires;
+
+	public Folder(String name, Folder p){
+		super(name, p);
+		this.entries = new HashMap<>();
+	}
+
+	public Map<String, Entry> getEntries(){
+		return this.entries;
+	}
+
+	public void deleteEntry(Entry entry){
+		this.entires.remove(entry.getName());
+	}
+
+	public void addEntry(Entry entry){
+		if(entries.contains(entry.getName())){
+			// Raise exception
+			return;
+		}
+		this.entries.put(entry.getName(), entry);
+	}
+
+}
